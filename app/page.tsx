@@ -1,93 +1,98 @@
-export default function Home() {
+import { Header } from "@/components/layout/header";
+import { HeroSection } from "@/components/features/home/hero";
+import { CategoriesSection } from "@/components/features/home/categories";
+import { ProductCard } from "@/components/features/products/product-card";
+import { getAPIClient } from "@/services/api";
+import { BackendProduct } from "@/types/backend";
+
+async function getFeaturedProducts() {
+  const api = await getAPIClient();
+  try {
+    const { data } = await api.get<BackendProduct[]>("/products");
+
+    // Filtro para não mostrar produtos "Rascunho"
+    return data.filter((p) => p.status !== "DRAFT");
+  } catch (error) {
+    console.error("Erro ao carregar produtos:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const products = await getFeaturedProducts();
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 font-sans">
+      <Header />
 
-      {/* NAVBAR */}
-      <header className="flex items-center justify-between px-8 py-5 border-b bg-white">
-        <h1 className="text-2xl font-bold tracking-tight">JC INC</h1>
-        <nav className="hidden md:flex items-center gap-8 text-gray-600">
-          <a href="#" className="hover:text-black">Categorias</a>
-          <a href="#" className="hover:text-black">Quero vender</a>
-        </nav>
+      <main>
+        <HeroSection />
 
-        <a href= "/login" className="px-4 py-2 bg-black text-white rounded-xl hover:opacity-80 transition">
-          Entrar
-        </a>
-      </header>
+        {/* Componente agora lida com categorias sem imagem */}
+        <CategoriesSection />
 
-      {/* HERO */}
-      <section className="px-8 pt-16 pb-24 max-w-6xl mx-auto grid md:grid-cols-2 gap-14 items-center">
-        
-        <div>
-          <h2 className="text-5xl md:text-6xl font-bold leading-light te mb-6">
-            O futuro do artesanato
-            <span className="block text-blue-600">começa aqui.</span>
-          </h2>
-
-          <p className="text-gray-600 text-lg mb-8">
-            Tecnologia, velocidade e design trabalhando juntos para entregar a melhor experiência de compra.
-          </p>
-
-          <div className="flex gap-4">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow-md">
-              Começar Agora
-            </button>
-            <button className="px-6 py-3 border rounded-xl hover:bg-gray-100 transition">
-              Explorar Produtos
-            </button>
+        <section id="produtos" className="px-8 py-20 max-w-7xl mx-auto">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <h3 className="text-3xl font-bold text-gray-900">
+                Produtos em Alta
+              </h3>
+              <p className="text-gray-500 mt-2">
+                Destaques da comunidade JC INC.
+              </p>
+            </div>
+            <a
+              href="/busca"
+              className="text-blue-600 font-medium hover:underline hidden sm:block"
+            >
+              Ver todos &rarr;
+            </a>
           </div>
-        </div>
-      </section>
 
-      {/* CATEGORIAS */}
-      <section className="px-8 py-16 bg-white">
-        <h3 className="text-3xl font-semibold mb-10 text-center">Categorias Populares</h3>
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
-          
-          {["Artesanatos em barro", "Chaveiros", "Casa e utilitarios", ""].map((cat, i) => (
-            <div
-              key={i}
-              className="p-6 bg-gray-100 rounded-xl cursor-pointer hover:shadow-xl transition shadow-sm flex flex-col items-center"
-            >
-              <div className="h-24 w-24 bg-white rounded-xl shadow flex items-center justify-center text-xl font-bold">
-                IMG
-              </div>
-              <p className="mt-4 text-lg font-medium">{cat}</p>
+          {products.length > 0 ? (
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  id={product.id}
+                  // Mapeamento: backend.title -> frontend.name
+                  name={product.title}
+                  description={product.description}
+                  // Mapeamento: backend.price(string) -> frontend.price(number)
+                  price={Number(product.price)}
+                  // Mapeamento: pega primeira url ou undefined
+                  imageUrl={
+                    product.imageUrls.length > 0
+                      ? product.imageUrls[0]
+                      : undefined
+                  }
+                  // Mapeamento: pega nome da categoria aninhada
+                  categoryName={product.categories[0]?.name}
+                />
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* PRODUTOS EM DESTAQUE */}
-      <section className="px-8 py-20 max-w-6xl mx-auto">
-        <h3 className="text-3xl font-semibold mb-10">Produtos em Alta</h3>
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-10">
-          
-          {[1,2,3].map((p) => (
-            <div
-              key={p}
-              className="bg-white rounded-xl shadow hover:shadow-xl transition p-4 cursor-pointer"
-            >
-              <div className="h-48 bg-gray-200 rounded-xl mb-4 flex items-center justify-center text-xl font-bold">
-                IMG
-              </div>
-
-              <h4 className="text-lg font-semibold">Produto {p}</h4>
-              <p className="text-gray-600 mt-1">Descrição curta do produto.</p>
-
-              <div className="mt-4 flex justify-between items-center">
-                <span className="font-bold text-xl">R$ 199,99</span>
-                <button className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                  Comprar
-                </button>
-              </div>
+          ) : (
+            <div className="text-center py-20 bg-white rounded-2xl border border-dashed">
+              <p className="text-gray-500">
+                Nenhum produto disponível no momento.
+              </p>
             </div>
-          ))}
+          )}
 
-        </div>
-      </section>
+          <div className="mt-10 text-center sm:hidden">
+            <a
+              href="/busca"
+              className="text-blue-600 font-medium hover:underline"
+            >
+              Ver todos os produtos &rarr;
+            </a>
+          </div>
+        </section>
+      </main>
+
+      <footer className="bg-white border-t py-12 text-center text-gray-500">
+        <p className="mb-2">© 2025 JC INC. Todos os direitos reservados.</p>
+      </footer>
     </div>
   );
 }
