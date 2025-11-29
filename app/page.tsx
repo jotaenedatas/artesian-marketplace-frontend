@@ -5,12 +5,9 @@ export default function Home() {
       {/* NAVBAR */}
       <header className="flex items-center justify-between px-8 py-5 border-b bg-white">
         <h1 className="text-2xl font-bold tracking-tight">JC INC</h1>
-
         <nav className="hidden md:flex items-center gap-8 text-gray-600">
           <a href="#" className="hover:text-black">Categorias</a>
-          <a href="#" className="hover:text-black">Promoções</a>
           <a href="#" className="hover:text-black">Quero vender</a>
-          <a href="#" className="hover:text-black">Contato</a>
         </nav>
 
         <a href= "/login" className="px-4 py-2 bg-black text-white rounded-xl hover:opacity-80 transition">
