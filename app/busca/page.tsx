@@ -86,16 +86,13 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                       key={product.id}
                       id={product.id}
                       name={product.title}
-                      // Converte string/Decimal do backend para number pro frontend
                       price={Number(product.price)}
                       description={product.description}
-                      // Pega a primeira imagem ou null
                       imageUrl={
                         product.imageUrls.length > 0
                           ? product.imageUrls[0]
                           : null
                       }
-                      // Pega o nome da primeira categoria (opcional chaining para segurança)
                       categoryName={product.categories?.[0]?.name}
                     />
                   ))}
@@ -124,7 +121,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                 </div>
               </>
             ) : (
-              // Estado Vazio (Empty State)
               <div className="flex flex-col items-center justify-center py-24 bg-white rounded-xl border border-dashed border-gray-200 text-center px-4">
                 <div className="p-4 bg-gray-50 rounded-full mb-4">
                   <SearchX className="h-10 w-10 text-gray-400" />
