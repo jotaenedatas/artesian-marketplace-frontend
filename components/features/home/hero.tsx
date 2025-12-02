@@ -27,9 +27,6 @@ export function HeroSection() {
           </Link>
         </div>
       </div>
-      <div className="hidden md:flex h-96 bg-gray-100 rounded-2xl items-center justify-center border border-dashed border-gray-300">
-        <span className="text-gray-400 font-medium">Banner Promocional</span>
-      </div>
     </section>
   );
 }
