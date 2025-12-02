@@ -4,14 +4,20 @@ import { CategoriesSection } from "@/components/features/home/categories";
 import { ProductCard } from "@/components/features/products/product-card";
 import { getAPIClient } from "@/services/api";
 import { BackendProduct } from "@/types/backend";
+interface ProductsResponse {
+  data: BackendProduct[];
+  meta: {
+    nextCursor: string | null;
+    hasNextPage: boolean;
+  };
+}
 
 async function getFeaturedProducts() {
   const api = await getAPIClient();
   try {
-    const { data } = await api.get<BackendProduct[]>("/products");
+    const { data } = await api.get<ProductsResponse>("/products");
 
-    // Filtro para não mostrar produtos "Rascunho"
-    return data.filter((p) => p.status !== "DRAFT");
+    return data.data.filter((p) => p.status !== "DRAFT");
   } catch (error) {
     console.error("Erro ao carregar produtos:", error);
     return [];
@@ -28,7 +34,6 @@ export default async function Home() {
       <main>
         <HeroSection />
 
-        {/* Componente agora lida com categorias sem imagem */}
         <CategoriesSection />
 
         <section id="produtos" className="px-8 py-20 max-w-7xl mx-auto">
@@ -55,19 +60,15 @@ export default async function Home() {
                 <ProductCard
                   key={product.id}
                   id={product.id}
-                  // Mapeamento: backend.title -> frontend.name
                   name={product.title}
                   description={product.description}
-                  // Mapeamento: backend.price(string) -> frontend.price(number)
                   price={Number(product.price)}
-                  // Mapeamento: pega primeira url ou undefined
                   imageUrl={
                     product.imageUrls.length > 0
                       ? product.imageUrls[0]
                       : undefined
                   }
-                  // Mapeamento: pega nome da categoria aninhada
-                  categoryName={product.categories[0]?.name}
+                  categoryName={product.categories?.[0]?.name}
                 />
               ))}
             </div>
