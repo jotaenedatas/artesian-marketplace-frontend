@@ -79,7 +79,7 @@ export function ProductCard({
         </span>
 
         <Link
-          href={`/produto/${id}`}
+          href={`/produtos/${id}`}
           className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition"
         >
           Comprar
