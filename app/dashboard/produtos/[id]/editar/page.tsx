@@ -1,6 +1,6 @@
-import { EditProductForm } from "@/components/features/dashboard/product-form/edit-form";
 import { getAPIClient } from "@/services/api";
 import { BackendProduct } from "@/types/backend";
+import { EditProductForm } from "@/components/features/dashboard/product-form/edit-form";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -17,7 +17,23 @@ export default async function EditPage({ params, searchParams }: PageProps) {
 
   try {
     const { data } = await api.get<BackendProduct>(`/products/${id}`);
-    product = data;
+
+    if (data) {
+      product = {
+        id: data.id,
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        compareAtPrice: data.compareAtPrice,
+        stock: data.stock,
+        material: data.material,
+        weight: data.weight,
+        imageUrls: data.imageUrls,
+        status: data.status,
+        artisanId: data.artisanId,
+        categories: data.categories || [], 
+      } as BackendProduct;
+    }
   } catch (error) {
     return (
       <div className="p-8 text-center text-gray-500">
