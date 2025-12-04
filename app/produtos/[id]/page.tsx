@@ -4,6 +4,8 @@ import { Header } from "@/components/layout/header";
 import { getProductById } from "@/services/products.service";
 import { ProductGallery } from "@/components/features/products/product-details/gallery";
 import { ProductInfo } from "@/components/features/products/product-details/info";
+import { getAPIClient } from "@/services/api";
+import { BackendUser } from "@/types/backend";
 
 interface PageProps {
   params: Promise<{
@@ -13,10 +15,24 @@ interface PageProps {
 
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
+  
+  // 1. Busca o Produto (Service ou Direto)
   const product = await getProductById(id);
 
   if (!product) {
     return notFound();
+  }
+
+  // 2. Busca o Usuário para saber a Role
+  const api = await getAPIClient();
+  let userRole: string | null = null;
+
+  try {
+    const { data: user } = await api.get<BackendUser>('/user/me');
+    userRole = user.role; // 'CUSTOMER', 'ARTISAN' ou 'ADMIN'
+  } catch (error) {
+    // Se der erro (401), é visitante (null), então pode comprar (vira cliente depois)
+    userRole = null; 
   }
 
   return (
@@ -25,7 +41,7 @@ export default async function ProductPage({ params }: PageProps) {
 
       <main className="py-10 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Breadcrumbs - Navegação de topo */}
+          {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-gray-500 mb-8 overflow-hidden">
             <Link href="/" className="hover:text-blue-600 transition">
               Início
@@ -40,9 +56,8 @@ export default async function ProductPage({ params }: PageProps) {
             </span>
           </nav>
 
-          {/* Grid Principal: Galeria vs Info */}
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-            {/* Coluna Esquerda: Galeria */}
+            {/* Galeria */}
             <div className="w-full lg:sticky lg:top-8">
               <ProductGallery
                 images={product.imageUrls}
@@ -50,13 +65,14 @@ export default async function ProductPage({ params }: PageProps) {
               />
             </div>
 
-            {/* Coluna Direita: Informações */}
+            {/* Informações + Lógica de Compra */}
             <div className="w-full">
-              <ProductInfo product={product} />
+              <ProductInfo 
+                product={product} 
+                userRole={userRole} // <--- Passamos a role aqui
+              />
             </div>
           </div>
-
-          {/* Adicionar a seção de Reviews no futuro */}
         </div>
       </main>
 
