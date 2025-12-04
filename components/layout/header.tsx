@@ -1,9 +1,29 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
+import { CartWidget } from "./cart-widget";
+import { getAPIClient } from "@/services/api";
+import { BackendUser, UserRole } from "@/types/backend";
 
 export async function Header() {
   const cookieStore = await cookies();
-  const isLoggedIn = !!cookieStore.get("session_token")?.value;
+  const token = cookieStore.get("session_token")?.value;
+  const isLoggedIn = !!token;
+
+  let userRole: string | null = null;
+
+  // Se tiver token, descobre quem é para saber se esconde o carrinho
+  if (isLoggedIn) {
+    try {
+      const api = await getAPIClient();
+      const { data: user } = await api.get<BackendUser>("/user/me");
+      userRole = user.role;
+    } catch (error) {
+      // Se der erro no token, considera deslogado
+    }
+  }
+
+  // Regra: Mostra carrinho se for Visitante (null) ou Cliente
+  const showCart = !userRole || userRole === UserRole.CUSTOMER;
 
   return (
     <header className="flex items-center justify-between px-8 py-5 border-b bg-white sticky top-0 z-50">
@@ -15,12 +35,12 @@ export async function Header() {
       </Link>
 
       <nav className="hidden md:flex items-center gap-8 text-gray-600">
-        <Link
+        {/* <Link
           href="/categorias"
           className="hover:text-black transition-colors font-medium"
         >
           Categorias
-        </Link>
+        </Link> */}
         <Link
           href="/vender"
           className="hover:text-black transition-colors font-medium"
@@ -29,7 +49,12 @@ export async function Header() {
         </Link>
       </nav>
 
-      <div>
+      <div className="flex items-center gap-4">
+        {/* Renderização Condicional do Carrinho */}
+        {showCart && <CartWidget />}
+
+        <div className="h-6 w-px bg-gray-200 mx-1 hidden sm:block"></div>
+
         {isLoggedIn ? (
           <Link
             href="/dashboard"
@@ -49,7 +74,7 @@ export async function Header() {
               <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
               <circle cx="12" cy="7" r="4" />
             </svg>
-            Minha Conta
+            <span className="hidden sm:inline">Minha Conta</span>
           </Link>
         ) : (
           <Link
