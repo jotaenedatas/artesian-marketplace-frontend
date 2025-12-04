@@ -11,7 +11,6 @@ export async function Header() {
 
   let userRole: string | null = null;
 
-  // Se tiver token, descobre quem é para saber se esconde o carrinho
   if (isLoggedIn) {
     try {
       const api = await getAPIClient();
@@ -22,7 +21,6 @@ export async function Header() {
     }
   }
 
-  // Regra: Mostra carrinho se for Visitante (null) ou Cliente
   const showCart = !userRole || userRole === UserRole.CUSTOMER;
 
   return (

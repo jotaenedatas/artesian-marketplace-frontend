@@ -100,7 +100,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
                 {/* Paginação (Cursor) */}
                 <div className="mt-12 flex justify-center items-center gap-4">
-                  {/* Como é cursor, não tem "voltar" nativo fácil, geralmente usa-se botão do navegador ou reseta cursor */}
                   {params.cursor && (
                     <Link
                       href="/busca"

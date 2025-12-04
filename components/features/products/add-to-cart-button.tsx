@@ -28,11 +28,10 @@ export function AddToCartButton({ productId, price, name, imageUrl, stock }: Add
       title: name,
       price,
       imageUrl,
-      stock, // Mudei de maxStock para stock para bater com a interface do addItem
+      stock,
       quantity: 1
     });
 
-    // Feedback visual rápido (volta ao normal em 2s)
     setTimeout(() => {
       setIsAdding(false);
     }, 2000);

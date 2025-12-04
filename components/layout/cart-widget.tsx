@@ -9,7 +9,6 @@ export function CartWidget() {
   const count = useCartStore((state) => state.getCount());
   const [mounted, setMounted] = useState(false);
 
-  // CORREÇÃO: Usamos setTimeout para evitar o erro de "Synchronous setState"
   useEffect(() => {
     const timer = setTimeout(() => {
       setMounted(true);
@@ -19,8 +18,6 @@ export function CartWidget() {
   }, []);
 
   if (!mounted) {
-    // Renderiza um ícone vazio e estático enquanto carrega
-    // Isso evita o "pulo" visual e erros de hidratação
     return (
       <div className="p-2 text-gray-400">
         <ShoppingCart size={24} />

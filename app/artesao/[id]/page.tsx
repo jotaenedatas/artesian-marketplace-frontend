@@ -10,7 +10,7 @@ interface PublicArtisan {
   id: string;
   storeName: string;
   storeDescription: string | null;
-  userId: string; // CRUCIAL: Precisamos disso para saber quem é o dono
+  userId: string; 
   products: BackendProduct[];
 }
 
@@ -29,7 +29,6 @@ export default async function PublicStorePage({
   let artisan: PublicArtisan | null = null;
   let isOwner = false;
 
-  // 1. Busca dados da loja (PÚBLICO)
   try {
     const { data } = await api.get<PublicArtisan>(`/artisan/${id}`);
     artisan = data;
@@ -37,12 +36,9 @@ export default async function PublicStorePage({
     return notFound();
   }
 
-  // 2. Verifica se quem está vendo é o dono
   try {
-    // Tenta pegar o usuário logado. Se falhar (401), é apenas um visitante.
     const { data: currentUser } = await api.get<CurrentUser>("/user/me");
 
-    // COMPARAÇÃO DE DONO: ID do usuário logado == ID do usuário dono da loja
     if (currentUser && currentUser.id === artisan.userId) {
       isOwner = true;
     }
@@ -131,7 +127,6 @@ export default async function PublicStorePage({
                 description={product.description}
                 price={Number(product.price)}
                 imageUrl={product.imageUrls[0]}
-                // Passar categoria se tiver no include do getArtisanById
               />
             ))}
           </div>

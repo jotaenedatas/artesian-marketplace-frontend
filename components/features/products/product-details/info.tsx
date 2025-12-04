@@ -8,7 +8,7 @@ import { useState } from "react";
 
 interface ProductInfoProps {
   product: BackendProduct;
-  userRole?: string | null; // Nova prop opcional
+  userRole?: string | null; 
 }
 
 export function ProductInfo({ product, userRole }: ProductInfoProps) {
@@ -23,9 +23,6 @@ export function ProductInfo({ product, userRole }: ProductInfoProps) {
 
   const hasStock = product.stock > 0;
 
-  // LÓGICA DE BLOQUEIO
-  // Se tem role definida E não é CUSTOMER, então é restrito (Artesão/Admin)
-  // Se for null (visitante), permite comprar
   const isRestrictedUser = userRole && userRole !== UserRole.CUSTOMER;
 
   const handleAddToCart = () => {
@@ -48,9 +45,7 @@ export function ProductInfo({ product, userRole }: ProductInfoProps) {
 
   return (
     <div className="flex flex-col h-full">
-      {/* ... (Categoria, Título, Preço e Descrição continuam iguais) ... */}
 
-      {/* Categoria e Status */}
       <div className="flex items-center gap-3 mb-6">
         <span className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-bold uppercase tracking-wider rounded-full border border-blue-100">
           {product.categories?.[0]?.name || "Artesanato"}
@@ -88,7 +83,6 @@ export function ProductInfo({ product, userRole }: ProductInfoProps) {
         <p>{product.description}</p>
       </div>
 
-      {/* Detalhes Técnicos (Peso/Material) aqui... igual ao anterior */}
       {(product.material || product.weight) && (
         <div className="grid grid-cols-2 gap-4 mb-8">
           {product.material && (
@@ -118,7 +112,6 @@ export function ProductInfo({ product, userRole }: ProductInfoProps) {
         </div>
       )}
 
-      {/* Card do Vendedor (Link) aqui... igual ao anterior */}
       {product.artisan && (
         <Link
           href={`/artesao/${product.artisan.id}`}

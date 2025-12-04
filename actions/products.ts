@@ -16,11 +16,9 @@ export async function archiveProductAction(productId: string) {
   }
 }
 
-// NOVA AÇÃO: ATIVAR PRODUTO
 export async function activateProductAction(productId: string) {
   const api = await getAPIClient();
   try {
-    // Define como ACTIVE novamente
     await api.put(`/products/${productId}/status`, { status: 'ACTIVE' });
     revalidatePath("/dashboard/produtos");
     return { success: true };

@@ -11,7 +11,6 @@ export function ShopHeader({ storeName, stats }: ShopHeaderProps) {
 
   return (
     <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center gap-6 mb-8 transition-all hover:shadow-md">
-      {/* Ícone da Loja (Fallback já que não tem imagem) */}
       <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-blue-50 border-4 border-blue-100 flex items-center justify-center shrink-0 text-blue-600">
         <Store size={48} strokeWidth={1.5} />
       </div>

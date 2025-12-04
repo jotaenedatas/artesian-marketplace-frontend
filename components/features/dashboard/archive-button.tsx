@@ -16,7 +16,6 @@ export function ArchiveButton({ id }: { id: string }) {
     <button
       onClick={handleArchive}
       disabled={loading}
-      // Mudei a cor para amber/orange pois não é uma exclusão destrutiva total
       className="text-orange-600 hover:text-orange-800 text-sm font-medium transition disabled:opacity-50"
     >
       {loading ? "Arquivando..." : "Arquivar"}

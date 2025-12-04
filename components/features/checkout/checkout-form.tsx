@@ -11,21 +11,16 @@ import { BackendAddress } from "@/types/backend";
 export function CheckoutForm({ addresses }: { addresses: BackendAddress[] }) {
   const router = useRouter();
 
-  // Hooks do Zustand
   const { items, getTotal, updateQuantity, removeItem, clearCart } =
     useCartStore();
 
-  // Estados Locais
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fix para Hydration do Zustand no Next.js (COM CORREÇÃO DO SETTIMEOUT)
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // O setTimeout(..., 0) joga a atualização para o final da fila de eventos
-    // Isso evita o erro de "Synchronous setState" durante a renderização
     const timer = setTimeout(() => {
       setMounted(true);
     }, 0);
@@ -69,18 +64,16 @@ export function CheckoutForm({ addresses }: { addresses: BackendAddress[] }) {
     setLoading(true);
     setError(null);
 
-    // Prepara os itens para o formato do DTO
     const orderItems = items.map((i) => ({
       productId: i.productId,
       quantity: i.quantity,
     }));
 
-    // Chama a Server Action
     const result = await createOrderAction(selectedAddressId, orderItems);
 
     if (result.success) {
-      clearCart(); // Limpa o carrinho do navegador
-      router.push("/dashboard/pedidos"); // Redireciona para "Meus Pedidos"
+      clearCart();
+      router.push("/dashboard/pedidos"); 
     } else {
       setError(result.message || "Erro ao finalizar compra");
       setLoading(false);
@@ -91,7 +84,6 @@ export function CheckoutForm({ addresses }: { addresses: BackendAddress[] }) {
     <div className="grid md:grid-cols-3 gap-8">
       {/* COLUNA ESQUERDA: ITENS E ENDEREÇO */}
       <div className="md:col-span-2 space-y-6">
-        {/* 1. Lista de Produtos */}
         <section className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
             <span className="bg-blue-100 text-blue-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">

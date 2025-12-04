@@ -8,7 +8,6 @@ import { BackendCategory } from "@/types/backend";
 import { getAPIClient } from "@/services/api";
 import { Input, Select, TextArea } from "@/components/ui/form-component";
 
-// Componente Wrapper para buscar dados no servidor
 export default async function CreateProductPage() {
   const api = await getAPIClient();
   let categories: BackendCategory[] = [];
@@ -20,7 +19,7 @@ export default async function CreateProductPage() {
   return <CreateProductForm categories={categories} />;
 }
 
-// O Formulário (Client Side)
+
 function CreateProductForm({ categories }: { categories: BackendCategory[] }) {
   const [state, action] = useActionState(createProductAction, null);
 

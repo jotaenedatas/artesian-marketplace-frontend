@@ -4,7 +4,6 @@ import { StoreSettingsForm } from "@/components/features/dashboard/store-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-// Estendendo o tipo User para incluir o perfil (igual ao seu Prisma include)
 interface UserWithArtisan extends BackendUser {
   artisanProfile?: {
     id: string;
@@ -19,7 +18,6 @@ export default async function StoreManagementPage() {
   let user: UserWithArtisan | null = null;
 
   try {
-    // Busca o usuário logado + perfil de artesão
     const { data } = await api.get<UserWithArtisan>("/user/me");
     user = data;
     console.log(user)
@@ -27,8 +25,6 @@ export default async function StoreManagementPage() {
     redirect("/login");
   }
 
-  // 1. VALIDAÇÃO DE PROPRIEDADE
-  // Se não é ARTISAN ou não tem o perfil criado no banco -> Bloqueia
   if (user.role !== UserRole.ARTISAN || !user.artisanProfile) {
     return (
       <div className="max-w-2xl mx-auto mt-10 p-8 text-center border rounded-xl bg-orange-50 text-orange-800 border-orange-200">

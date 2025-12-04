@@ -26,7 +26,6 @@ export default function LoginPage() {
 
         <form action={action} className="space-y-4">
           
-          {/* 2. Passa o valor para a Server Action de forma invisível */}
           <input type="hidden" name="callbackUrl" value={callbackUrl} />
 
           <InputField

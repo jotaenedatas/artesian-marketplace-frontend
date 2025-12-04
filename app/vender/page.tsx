@@ -14,10 +14,8 @@ export default async function BecomeArtisanPage() {
     const { data } = await api.get<BackendUser>("/user/me");
     user = data;
   } catch (error) {
-    // Se der erro (401), apenas segue como visitante (user = null)
   }
 
-  // REGRA DE NEGÓCIO: Se já for artesão, manda pro dashboard
   if (user?.role === UserRole.ARTISAN) {
     redirect("/dashboard/loja");
   }

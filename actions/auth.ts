@@ -24,7 +24,6 @@ export async function loginAction(
   prevState: LoginState | null,
   formData: FormData
 ): Promise<LoginState | null> {
-  // 2. Validação Zod
   const validatedFields = loginSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -94,7 +93,6 @@ export async function registerAction(
   prevState: LoginState | null,
   formData: FormData
 ): Promise<LoginState | null> {
-  // 2. Validação dos campos
   const validatedFields = registerSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),

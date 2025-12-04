@@ -21,7 +21,7 @@ export async function updateStoreSettingsAction(artisanId: string, prevState: un
     });
     
     revalidatePath("/dashboard/loja");
-    revalidatePath(`/artesao/${artisanId}`); // Atualiza a página pública também
+    revalidatePath(`/artesao/${artisanId}`);
     return { success: true, message: "Loja atualizada com sucesso!" };
   } catch (error) {
     console.log(error)

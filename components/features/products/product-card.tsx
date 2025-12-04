@@ -52,7 +52,6 @@ export function ProductCard({
         )}
       </div>
 
-      {/* Nome da Categoria (se houver) */}
       {categoryName && (
         <span className="text-xs text-blue-600 font-semibold uppercase mb-1 block truncate">
           {categoryName}

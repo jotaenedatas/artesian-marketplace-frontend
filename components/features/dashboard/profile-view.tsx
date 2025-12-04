@@ -4,11 +4,10 @@ import { BackendUser } from "@/types/backend";
 import { Input } from "@/components/ui/form-component";
 
 interface ProfileViewProps {
-  user: BackendUser & { createdAt?: string }; // Adicionando createdAt opcional caso venha do back
+  user: BackendUser & { createdAt?: string }; 
 }
 
 export function ProfileView({ user }: ProfileViewProps) {
-  // Formata a data de criação da conta
   const joinDate = user.createdAt
     ? new Date(user.createdAt).toLocaleDateString("pt-BR", {
         month: "long",

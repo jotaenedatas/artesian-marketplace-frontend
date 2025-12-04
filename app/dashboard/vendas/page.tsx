@@ -26,7 +26,6 @@ export default async function MySalesPage() {
       {sales.length > 0 ? (
         <div className="space-y-4">
           {sales.map((order) => (
-            // Reutilizamos o card, mas marcamos isSale=true
             <OrderCard key={order.id} order={order} isSale={true} />
           ))}
         </div>

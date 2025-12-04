@@ -16,22 +16,19 @@ interface PageProps {
 export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
   
-  // 1. Busca o Produto (Service ou Direto)
   const product = await getProductById(id);
 
   if (!product) {
     return notFound();
   }
 
-  // 2. Busca o Usuário para saber a Role
   const api = await getAPIClient();
   let userRole: string | null = null;
 
   try {
     const { data: user } = await api.get<BackendUser>('/user/me');
-    userRole = user.role; // 'CUSTOMER', 'ARTISAN' ou 'ADMIN'
+    userRole = user.role; 
   } catch (error) {
-    // Se der erro (401), é visitante (null), então pode comprar (vira cliente depois)
     userRole = null; 
   }
 
@@ -69,7 +66,7 @@ export default async function ProductPage({ params }: PageProps) {
             <div className="w-full">
               <ProductInfo 
                 product={product} 
-                userRole={userRole} // <--- Passamos a role aqui
+                userRole={userRole}
               />
             </div>
           </div>

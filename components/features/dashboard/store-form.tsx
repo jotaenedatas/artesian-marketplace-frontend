@@ -12,7 +12,6 @@ interface StoreData {
 }
 
 export function StoreSettingsForm({ initialData }: { initialData: StoreData }) {
-  // Bind do ID para a action saber qual artesão atualizar
   const updateActionWithId = updateStoreSettingsAction.bind(
     null,
     initialData.id
@@ -21,10 +20,8 @@ export function StoreSettingsForm({ initialData }: { initialData: StoreData }) {
 
   return (
     <div className="space-y-8">
-      {/* SEÇÃO VISUAL (Simulação de Capa/Avatar) */}
       <section className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
         <div className="h-32 bg-gradient-to-r from-blue-600 to-purple-600 relative">
-          {/* Aqui entraria a lógica de upload de banner futuramente */}
         </div>
         <div className="px-8 pb-6 relative flex items-end">
           <div className="-mt-12 relative">

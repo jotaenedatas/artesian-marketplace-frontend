@@ -134,7 +134,6 @@ export default async function MyProductsPage() {
                       Editar
                     </Link>
 
-                    {/* MUDANÇA AQUI: Se for Arquivado OU Rascunho, mostra botão Ativar */}
                     {product.status === "ARCHIVED" ||
                     product.status === "DRAFT" ? (
                       <ActivateButton id={product.id} />

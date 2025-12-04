@@ -20,7 +20,6 @@ export async function createProductAction(
     };
   }
 
-  // Limpa campos opcionais vazios
   const payload = {
     ...validated.data,
     weight: validated.data.weight === "" ? undefined : validated.data.weight,
@@ -40,7 +39,6 @@ export async function createProductAction(
     };
   }
 
-  // Redireciona para edição para adicionar foto
   redirect(`/dashboard/produtos/${newId}/editar?new=true`);
 }
 
@@ -87,7 +85,6 @@ export async function uploadImageAction(id: string, formData: FormData) {
   const api = await getAPIClient();
 
   try {
-    // O NestJS espera o campo 'file' no interceptor
     await api.post(`/products/${id}/images`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });

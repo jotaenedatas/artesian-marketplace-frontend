@@ -3,14 +3,13 @@ import { getAPIClient } from "@/services/api";
 import { BackendProduct } from "@/types/backend";
 
 interface PageProps {
-  params: Promise<{ id: string }>; // Atualizado para Next.js 15 (params é Promise)
-  searchParams: Promise<{ new?: string }>; // searchParams também é Promise
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ new?: string }>;
 }
 
 export default async function EditPage({ params, searchParams }: PageProps) {
-  // Em Next.js 15, params e searchParams devem ser aguardados
   const { id } = await params;
-  const { new: isNew } = await searchParams; // Renomeando 'new' para 'isNew' pois 'new' é palavra reservada
+  const { new: isNew } = await searchParams;
 
   const api = await getAPIClient();
 
@@ -20,7 +19,6 @@ export default async function EditPage({ params, searchParams }: PageProps) {
     const { data } = await api.get<BackendProduct>(`/products/${id}`);
     product = data;
   } catch (error) {
-    // Se der erro 404 ou 500, já retorna aqui
     return (
       <div className="p-8 text-center text-gray-500">
         <h2 className="text-xl font-bold mb-2">Produto não encontrado</h2>
@@ -29,8 +27,6 @@ export default async function EditPage({ params, searchParams }: PageProps) {
     );
   }
 
-  // --- CORREÇÃO DO ERRO ---
-  // Essa verificação garante ao TypeScript que 'product' não é null daqui para baixo
   if (!product) {
     return <div>Produto não carregado.</div>;
   }
@@ -48,7 +44,6 @@ export default async function EditPage({ params, searchParams }: PageProps) {
         )}
       </div>
 
-      {/* Agora o TypeScript sabe que product é BackendProduct (sem null) */}
       <EditProductForm product={product} />
     </main>
   );

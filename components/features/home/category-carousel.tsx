@@ -11,14 +11,12 @@ interface CategoryCarouselProps {
 export function CategoryCarousel({ categories }: CategoryCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Função para rolar para a esquerda
   const scrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: -300, behavior: "smooth" });
     }
   };
 
-  // Função para rolar para a direita
   const scrollRight = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: 300, behavior: "smooth" });
@@ -27,7 +25,6 @@ export function CategoryCarousel({ categories }: CategoryCarouselProps) {
 
   return (
     <div className="relative group">
-      {/* Botão Esquerda (só aparece no hover da seção para ficar clean) */}
       <button
         onClick={scrollLeft}
         className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 p-2 rounded-full shadow-lg border opacity-0 group-hover:opacity-100 transition-opacity disabled:opacity-0 -ml-4"
@@ -52,7 +49,7 @@ export function CategoryCarousel({ categories }: CategoryCarouselProps) {
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto scroll-smooth no-scrollbar pb-4 px-1"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }} // Esconde barra de rolagem
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         {categories.map((cat) => (
           <Link

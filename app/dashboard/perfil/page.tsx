@@ -8,7 +8,6 @@ export default async function ProfilePage() {
   let user: BackendUser | null = null;
 
   try {
-    // Rota GET /user do seu UserController
     const { data } = await api.get<BackendUser>("/auth/me");
     user = data;
   } catch (error) {

@@ -18,16 +18,13 @@ export async function createOrderAction(
     console.log(items)
 
   try {
-    // Payload exato que seu CreateOrderDto espera
     const payload = {
       items: items,
       userAddressId: userAddressId,
     };
 
-    // POST /orders
     const { data: order } = await api.post("/orders", payload);
 
-    // Revalida para atualizar histórico
     revalidatePath("/dashboard/pedidos");
 
     return { success: true, orderId: order.id };

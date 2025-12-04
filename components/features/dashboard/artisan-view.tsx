@@ -19,7 +19,6 @@ export function ArtisanDashboard({ user }: { user: BackendUser }) {
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {" "}
-        {/* Adjusted grid columns */}
         {/* PRODUTOS */}
         <Link
           href="/dashboard/produtos"
