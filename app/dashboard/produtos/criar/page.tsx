@@ -1,101 +1,120 @@
 "use client";
 
-export default function CriarProduto() {
+import { useActionState } from "react";
+import Link from "next/link";
+import { createProductAction } from "@/actions/product-form";
+import { SubmitButton } from "@/components/ui/submit-button";
+import { BackendCategory } from "@/types/backend";
+import { getAPIClient } from "@/services/api";
+import { Input, Select, TextArea } from "@/components/ui/form-component";
+
+// Componente Wrapper para buscar dados no servidor
+export default async function CreateProductPage() {
+  const api = await getAPIClient();
+  let categories: BackendCategory[] = [];
+  try {
+    const { data } = await api.get("/categories");
+    categories = data;
+  } catch (e) {}
+
+  return <CreateProductForm categories={categories} />;
+}
+
+// O Formulário (Client Side)
+function CreateProductForm({ categories }: { categories: BackendCategory[] }) {
+  const [state, action] = useActionState(createProductAction, null);
+
   return (
-    <main className="p-6 max-w-4xl mx-auto font-inter bg-gray-50 min-h-screen">
-      <section className="bg-white p-6 rounded-2xl shadow mb-8">
-        <h1 className="text-3xl font-bold text-blue-700 mb-2">Criar Produto</h1>
-        <p className="text-gray-600 mb-6">Preencha as informações abaixo para cadastrar um novo produto.</p>
+    <main className="max-w-4xl mx-auto">
+      <div className="mb-8">
+        <Link
+          href="/dashboard/produtos"
+          className="text-sm text-gray-500 hover:text-blue-600 mb-2 inline-block"
+        >
+          &larr; Voltar para lista
+        </Link>
+        <h1 className="text-3xl font-bold text-blue-700">Criar Produto</h1>
+        <p className="text-gray-600">
+          Preencha as informações básicas para iniciar.
+        </p>
+      </div>
 
-        <form className="space-y-5">
-          {/* Título */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Título *</label>
-            <input
-              type="text"
-              placeholder="Nome do produto"
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
-            />
+      <section className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+        {state?.message && (
+          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-xl text-sm border border-red-100">
+            {state.message}
           </div>
+        )}
 
-          {/* Categoria */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Categoria *</label>
-            <input
-              type="text"
-              placeholder="ID da categoria"
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
-            />
-          </div>
+        <form action={action} className="space-y-6">
+          <Input
+            label="Título *"
+            name="title"
+            placeholder="Nome do produto"
+            errorMessage={state?.errors?.title}
+          />
 
-          {/* Descrição */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Descrição</label>
-            <textarea
-              placeholder="Descrição detalhada"
-              className="w-full p-3 border rounded-xl h-28 focus:ring-2 focus:ring-blue-600 outline-none"
-            ></textarea>
-          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Select
+              label="Categoria *"
+              name="categoryId"
+              defaultValue=""
+              errorMessage={state?.errors?.categoryId}
+            >
+              <option value="" disabled>
+                Selecione...
+              </option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </Select>
 
-          {/* Preço */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Preço *</label>
-            <input
+            <Input
+              label="Preço (R$) *"
+              name="price"
               type="number"
               step="0.01"
-              placeholder="Ex: 79.90"
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
+              placeholder="0.00"
+              errorMessage={state?.errors?.price}
             />
           </div>
 
-          {/* Estoque */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Estoque *</label>
-            <input
+          <TextArea
+            label="Descrição"
+            name="description"
+            placeholder="Detalhes do produto..."
+            errorMessage={state?.errors?.description}
+          />
+
+          <div className="grid md:grid-cols-3 gap-6">
+            <Input
+              label="Estoque Inicial *"
+              name="stock"
               type="number"
-              placeholder="Quantidade em estoque"
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
+              placeholder="0"
+              errorMessage={state?.errors?.stock}
             />
-          </div>
-
-          {/* Material */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Material</label>
-            <input
-              type="text"
-              placeholder="Ex: Algodão, Madeira, etc."
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
+            <Input
+              label="Material"
+              name="material"
+              placeholder="Ex: Algodão"
+              errorMessage={state?.errors?.material}
             />
-          </div>
-
-          {/* Peso */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Peso (kg)</label>
-            <input
+            <Input
+              label="Peso (kg)"
+              name="weight"
               type="number"
-              step="0.01"
-              placeholder="Ex: 0.35"
-              className="w-full p-3 border rounded-xl focus:ring-2 focus:ring-blue-600 outline-none"
+              step="0.001"
+              placeholder="0.000"
+              errorMessage={state?.errors?.weight}
             />
           </div>
 
-          {/* Upload de Imagens */}
-          <div>
-            <label className="block text-sm font-medium mb-2">Imagens do Produto</label>
-            <input
-              type="file"
-              multiple
-              className="w-full border p-3 rounded-xl bg-gray-50 cursor-pointer"
-            />
+          <div className="pt-4">
+            <SubmitButton>Criar Produto</SubmitButton>
           </div>
-
-          {/* Botão */}
-          <button
-            type="button"
-            className="w-full py-3 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition"
-          >
-            Criar Produto
-          </button>
         </form>
       </section>
     </main>
