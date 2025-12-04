@@ -4,7 +4,6 @@ import { BackendProduct, PaginatedProductsResponse, ProductFilters } from "@/typ
 export async function getProductById(
   id: string
 ): Promise<BackendProduct | null> {
-  console.log(id);
   const api = await getAPIClient();
   try {
     const { data } = await api.get<BackendProduct>(`/products/${id}`);
