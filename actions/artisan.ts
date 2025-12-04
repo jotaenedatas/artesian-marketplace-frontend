@@ -32,6 +32,7 @@ export async function applyArtisanAction(prevState: unknown, formData: FormData)
 
     return { success: true, message: "Solicitação enviada com sucesso!" };
   } catch (error) {
+    console.log(error.response)
     const errorMsg = "Erro ao processar solicitação.";
     return { message: errorMsg };
   }
